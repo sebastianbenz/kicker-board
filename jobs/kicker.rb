@@ -7,7 +7,7 @@ def wait_for_player(redis, color, position)
       on.message do |channel, msg|
         puts "#{{ "player_#{color}_#{position}.name" => msg}}"
         send_event("kicker", { "player_#{color}_#{position}.name" => msg})
-        send_event("testid", { value: msg })
+        send_event("kickerid", { value: msg })
         puts "##{channel} - #{msg}"
       end
     end
