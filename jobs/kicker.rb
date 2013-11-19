@@ -5,12 +5,12 @@ def wait_for_player(redis, color, position)
   Thread.start do
     redis.subscribe("kicker:register:player:#{color}:#{position}") do |on|
       on.message do |channel, msg|
-        puts "#{{ "player_#{color}_#{position}.name" => msg}}"
-        send_event("kickerid", { "player_#{color}_#{position}.name" => msg})
-        send_event("kickerid", { "value" =>  "#{msg}" })
-        puts "##{channel} - #{msg}"
+          puts "#{{ "player_#{color}_#{position}.name" => msg}}"
+            #send_event("kickerid", { "player_#{color}_#{position}.name" => msg})
+          send_event("kickerid", { "value" =>  "#{msg}" })
       end
     end
+    puts "Stoped listening for #{{ "player_#{color}_#{position}.name" => msg}}"
   end
 end
 
