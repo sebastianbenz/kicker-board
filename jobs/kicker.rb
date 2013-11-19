@@ -13,7 +13,6 @@ def wait_for_player(redis, color, position)
           send_event("kickerid", { "player_#{color}_#{position}" => player})
       end
     end
-    puts "Stoped listening for #{{ "player_#{color}_#{position}.name" => msg}}"
   end
 end
 
