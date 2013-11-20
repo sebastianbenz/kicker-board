@@ -20,7 +20,6 @@ def wait_for_players
       redis = Redis.new
       redis.psubscribe("kicker:register:*") do |on|
         on.pmessage do |channel, msg|
-          puts "received #{msg} on #{channel}"
           fragments = channel.split(":")
           color = fragments[3]
           position = fragments[4]
