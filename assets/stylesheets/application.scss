@@ -107,9 +107,21 @@ h3 {
   font-weight: 600;
 }
 
+$color-white: #eee;
+$color-black: #4a4a49;
+
 // ----------------------------------------------------------------------------
 // Kicker widget styles
 // ----------------------------------------------------------------------------
+.black {
+  background-color: $color-black;
+  color: $color-white;
+}
+
+.white {
+  background-color: $color-white;
+  color: $color-black;
+}
 
 // ----------------------------------------------------------------------------
 // Base widget styles

@@ -16,12 +16,16 @@ def avatar_url(email_address)
 end
 
 def wait_for_score
+  previous_score = {}
   subscribe("kicker:game:score") do |channel, msg|
     score = JSON.parse(msg)
     puts "score: #{msg} -> #{score}"
     score.each do |key, value|
       puts "send event kicker-score-#{key} -> #{value}"
-      send_event("kicker-score-#{key}", { text: value })
+      if previous_score[key] != value
+        send_event("kicker-score-#{key}", { text: value })
+        previous_score[key] = value
+      end
     end
   end
 end

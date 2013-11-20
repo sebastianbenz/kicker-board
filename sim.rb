@@ -11,8 +11,9 @@ commands = {
 
 commands.each do |key, value|
   puts redis.publish key, value
+  sleep(1)
 end
 
-redis.publish "kicker:game:score", '{ "black": 1, "white": 2 }'
+redis.publish "kicker:game:score", '{ "black": 3, "white": 2 }'
 
 
