@@ -16,7 +16,6 @@ DEFAULT_AVATAR = avatar_url( "oliver.mueller@esrlabs.com")
 
 if File.exists?(CONFIG_FILE)
   File.open(CONFIG_FILE) do |io|
-    puts "{io.read}"
     eval(io.read)
   end
 end
@@ -43,6 +42,8 @@ def wait_for_score
       playback("finish_him.mp3")
     elsif score.any? { |key, value| value == 6 }
       playback("cheer.mp3")
+    else
+      playback("goal.mp3")
     end
 
     score.each do |key, value|
