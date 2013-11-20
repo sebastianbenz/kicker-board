@@ -14,11 +14,17 @@ def avatar_url(email_address)
   "/assets/avatars/#{email_address}.png"
 end
 
-def wait_for_player(color, position)
+def wait_for_players
   Thread.new do
-    redis = Redis.new
-    redis.subscribe("kicker:register:player:#{color}:#{position}") do |on|
-      on.message do |channel, msg|
+    begin
+      redis = Redis.new
+      redis.psubscribe("kicker:register:*") do |on|
+        on.pmessage do |channel, msg|
+          puts "received #{msg} on #{channel}"
+          fragments = channel.split(":")
+          color = fragments[3]
+          position = fragments[4]
+
           fragments = msg.split(";") 
           player = {
             name: fragments.first,
@@ -26,12 +32,12 @@ def wait_for_player(color, position)
           }
           puts "sending event: #{player}"
           send_event("kicker-player-#{color}-#{position}", { player: player })
+        end
       end
+    rescue Exception => e
+      puts "we failed #{e}"
     end
   end
 end
 
-wait_for_player("black", "offence")
-wait_for_player("black", "defense")
-wait_for_player("white", "offence")
-wait_for_player("white", "defense")
+wait_for_players()

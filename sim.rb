@@ -10,7 +10,7 @@ commands = {
 }
 
 commands.each do |key, value|
-  redis.publish key, value
+  puts redis.publish key, value
 end
 
 
