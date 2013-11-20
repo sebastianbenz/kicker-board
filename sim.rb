@@ -14,6 +14,7 @@ commands.each do |key, value|
   sleep(1)
 end
 
-redis.publish "kicker:game:score", '{ "black": 5, "white": 5 }'
+redis.publish "kicker:game:score", '{ "black": 4, "white": 5 }'
+redis.publish "kicker:unregister:player:white:offence" , ""
 
 

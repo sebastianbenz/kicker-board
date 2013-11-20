@@ -4,6 +4,16 @@ require 'json'
 
 CONFIG_FILE = 'config.rb'
 
+def avatar_path(email_address)
+  "assets/images/avatars/#{email_address}.png"
+end
+
+def avatar_url(email_address)
+  "/assets/avatars/#{email_address}.png"
+end
+
+DEFAULT_AVATAR = avatar_url( "oliver.mueller@esrlabs.com")
+
 if File.exists?(CONFIG_FILE) 
   File.open(CONFIG_FILE) do |io|
     puts "{io.read}"
@@ -13,16 +23,9 @@ end
 
 def avatar(email_address)
   return avatar_url(email_address) if File.exists?(avatar_path(email_address))
-  return avatar_url( "oliver.mueller@esrlabs.com")
+  return DEFAULT_AVATAR
 end
 
-def avatar_path(email_address)
-  "assets/images/avatars/#{email_address}.png"
-end
-
-def avatar_url(email_address)
-  "/assets/avatars/#{email_address}.png"
-end
 
 def wait_for_score
   previous_score = {}
@@ -43,6 +46,19 @@ def wait_for_score
   end
 end
 
+def wait_for_unregister
+  subscribe("kicker:unregister:*") do |channel, msg|
+    puts "unregister: #{channel}"
+    fragments = channel.split(":")
+    color = fragments[3]
+    position = fragments[4]
+    player = {
+      name: "",
+      avatar: ""
+    }
+    send_new_player_event(color, position, player)
+  end
+end
 
 def wait_for_players
   subscribe("kicker:register:*") do |channel, msg|
@@ -55,9 +71,13 @@ def wait_for_players
       name: fragments.first,
       avatar: avatar(fragments.last)
     }
+    send_new_player_event(color, position, player)
+  end
+end
+
+def send_new_player_event(color, position, player)
     puts "sending event: kicker-player-#{color}-#{position} "#{player}"
     send_event("kicker-player-#{color}-#{position}", { player: player })
-  end
 end
 
 def subscribe(pattern)
@@ -77,3 +97,5 @@ end
 
 wait_for_players
 wait_for_score
+wait_for_unregister
+
