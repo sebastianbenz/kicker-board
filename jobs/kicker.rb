@@ -33,7 +33,10 @@ def wait_for_score
     score = JSON.parse(msg)
     puts "score: #{msg} -> #{score}"
     if score.all? { |key, value| value == 5 }
-      send_event("audio-signal", { src: "/assets/hockey_charge.mp3" })
+      playback("hockey_charge.mp3")
+    end
+    if score.any? { |key, value| value == 6 }
+      playback("cheer.mp3")
     end
 
     score.each do |key, value|
@@ -44,6 +47,10 @@ def wait_for_score
       end
     end
   end
+end
+
+def playback(file_name)
+  send_event("audio-signal", { src: "/assets/#{file_name}"})
 end
 
 def wait_for_unregister
