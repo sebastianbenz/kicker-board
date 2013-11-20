@@ -2,8 +2,8 @@
 
 ##Register player
 
-    PUBLISH kicker:register:player:black:back "christian@mail.de"
-    PUBLISH kicker:register:player:black:front "sebastian@mail.de"
-    PUBLISH kicker:register:player:white:back "gerd@mail.de"
-    PUBLISH kicker:register:player:white:front "matthias@mail.de"
+    PUBLISH kicker:register:player:black:offence "Christian;christian.koestlin@esrlabs.com"
+    PUBLISH kicker:register:player:black:defense "Sebastian;sebastian.benz@esrlabs.com"
+    PUBLISH kicker:register:player:white:offence "Gerd;gerd.schaefer@esrlabs.com"
+    PUBLISH kicker:register:player:white:defense "Matthias;matthias.kessler@esrlabs.com"
 
