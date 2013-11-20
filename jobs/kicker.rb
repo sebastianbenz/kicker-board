@@ -14,7 +14,7 @@ end
 
 DEFAULT_AVATAR = avatar_url( "oliver.mueller@esrlabs.com")
 
-if File.exists?(CONFIG_FILE) 
+if File.exists?(CONFIG_FILE)
   File.open(CONFIG_FILE) do |io|
     puts "{io.read}"
     eval(io.read)
@@ -26,7 +26,10 @@ def avatar(email_address)
   return DEFAULT_AVATAR
 end
 
+require 'set'
 
+FLAWLESS_SCORE = Set.new([0, 6])
+ALMOST_THERE = Set.new([0, 5])
 def wait_for_score
   previous_score = {}
   subscribe("kicker:game:score") do |channel, msg|
@@ -34,8 +37,11 @@ def wait_for_score
     puts "score: #{msg} -> #{score}"
     if score.all? { |key, value| value == 5 }
       playback("hockey_charge.mp3")
-    end
-    if score.any? { |key, value| value == 6 }
+    elsif Set.new(score.values) == FLAWLESS_SCORE
+      playback("flawless.mp3")
+    elsif Set.new(score.values) == ALMOST_THERE
+      playback("finish_him.mp3")
+    elsif score.any? { |key, value| value == 6 }
       playback("cheer.mp3")
     end
 
@@ -73,7 +79,7 @@ def wait_for_players
     color = fragments[3]
     position = fragments[4]
 
-    fragments = msg.split(";") 
+    fragments = msg.split(";")
     player = {
       name: fragments.first,
       avatar: avatar(fragments.last)
@@ -105,4 +111,3 @@ end
 wait_for_players
 wait_for_score
 wait_for_unregister
-
