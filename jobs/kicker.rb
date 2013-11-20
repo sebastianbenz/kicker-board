@@ -2,6 +2,15 @@
 require 'redis'
 require 'json'
 
+CONFIG_FILE = 'config.rb'
+
+if File.exists?(CONFIG_FILE) 
+  File.open(CONFIG_FILE) do |io|
+    puts "{io.read}"
+    eval(io.read)
+  end
+end
+
 def avatar(email_address)
   return avatar_url(email_address) if File.exists?(avatar_path(email_address))
   return avatar_url( "oliver.mueller@esrlabs.com")
@@ -54,7 +63,7 @@ end
 def subscribe(pattern)
   Thread.new do
     begin
-      redis = Redis.new
+      redis = Redis.new({host: REDIS_HOST})
       redis.psubscribe(pattern) do |on|
         on.pmessage do |_, channel, msg|
           yield channel, msg
