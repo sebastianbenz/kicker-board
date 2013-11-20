@@ -18,9 +18,10 @@ end
 def wait_for_score
   subscribe("kicker:game:score") do |channel, msg|
     score = JSON.parse(msg)
+    puts "score: #{msg} -> #{score}"
     score.each do |key, value|
-      puts "#{key} -> #{value}"
-    #send_event("kicker-player-#{color}-#{position}", { player: player })
+      puts "send event kicker-score-#{key} -> #{value}"
+      send_event("kicker-score-#{key}", { text: value })
     end
   end
 end
@@ -36,7 +37,7 @@ def wait_for_players
       name: fragments.first,
       avatar: avatar(fragments.last)
     }
-    puts "sending event: #{player}"
+    puts "sending event: kicker-player-#{color}-#{position} "#{player}"
     send_event("kicker-player-#{color}-#{position}", { player: player })
   end
 end
@@ -46,7 +47,7 @@ def subscribe(pattern)
     begin
       redis = Redis.new
       redis.psubscribe(pattern) do |on|
-        on.pmessage do |channel, msg|
+        on.pmessage do |_, channel, msg|
           yield channel, msg
         end
       end
@@ -57,4 +58,4 @@ def subscribe(pattern)
 end
 
 wait_for_players
-#wait_for_score
+wait_for_score

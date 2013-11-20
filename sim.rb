@@ -10,12 +10,6 @@ commands = {
 }
 
 commands.each do |key, value|
-  puts redis.publish key, "name;email"
-end
-
-sleep(10)
-
-commands.each do |key, value|
   puts redis.publish key, value
 end
 
