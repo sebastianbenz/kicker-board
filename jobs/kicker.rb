@@ -20,6 +20,10 @@ def wait_for_score
   subscribe("kicker:game:score") do |channel, msg|
     score = JSON.parse(msg)
     puts "score: #{msg} -> #{score}"
+    if score.all? { |key, value| value == 5 }
+      send_event("audio-signal", { src: "/assets/hockey_charge.mp3" })
+    end
+
     score.each do |key, value|
       puts "send event kicker-score-#{key} -> #{value}"
       if previous_score[key] != value
@@ -29,6 +33,7 @@ def wait_for_score
     end
   end
 end
+
 
 def wait_for_players
   subscribe("kicker:register:*") do |channel, msg|

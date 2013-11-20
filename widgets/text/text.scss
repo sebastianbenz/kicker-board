@@ -11,16 +11,21 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);
 // ----------------------------------------------------------------------------
 .widget-text {
 
+  h1{
+    font-size: 350px;
+  }
 
   .title {
   }
 
   .more-info {
+    display: none;
     color: $moreinfo-color;
   }
 
   .updated-at {
     color: rgba(255, 255, 255, 0.7);
+    display: none;
   }
 
 
