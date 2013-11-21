@@ -95,16 +95,18 @@ def send_new_player_event(color, position, player)
 end
 
 def subscribe(pattern)
-  Thread.new do
-    begin
-      redis = Redis.new({host: REDIS_HOST})
-      redis.psubscribe(pattern) do |on|
-        on.pmessage do |_, channel, msg|
-          yield channel, msg
+  while true
+    Thread.new do
+      begin
+        redis = Redis.new({host: REDIS_HOST})
+        redis.psubscribe(pattern) do |on|
+          on.pmessage do |_, channel, msg|
+            yield channel, msg
+          end
         end
+      rescue Exception => e
+        puts "#{e}\nwe are toasted!\nbut we'll be back!"
       end
-    rescue Exception => e
-      puts "we failed #{e}"
     end
   end
 end
